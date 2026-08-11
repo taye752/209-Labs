@@ -1,0 +1,83 @@
+/*
+ * Lab2.c
+ *
+ * Created: 9/08/2026 11:34:29 pm
+ * Author : taye752
+ */ 
+
+#define F_CPU 2000000UL          
+
+#include <avr/io.h>
+#include <util/delay.h>
+#include <stdbool.h>
+
+#define UBRR_VALUE 12            
+#define PRIMES_LEN 62            
+
+
+void usart_init(uint16_t ubrr)
+{
+    UBRR0H = (uint8_t)(ubrr >> 8);
+    UBRR0L = (uint8_t)(ubrr);
+    UCSR0B = (1 << TXEN0);                       // transmitter on
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);      // 8-N-1
+}
+
+
+void usart_transmit(uint8_t data)
+{
+    while (!(UCSR0A & (1 << UDRE0)))             
+    {
+        ;
+    }
+    UDR0 = data;
+}
+
+
+bool is_prime(int v)
+{
+    if (v < 2) return false;
+    for (int i = 2; i < v; i++)
+    {
+        if (v % i == 0) return false;
+    }
+    return true;
+}
+
+int main(void)
+{
+    uint16_t primes[PRIMES_LEN];
+    int count = 0;
+    for (int n = 2; n < 300 && count < PRIMES_LEN; n++)
+    {
+        if (is_prime(n))
+        {
+            primes[count] = n;
+            count++;
+        }
+    }
+
+    usart_init(UBRR_VALUE);
+
+    while (1)
+    {
+        for (int i = 0; i < PRIMES_LEN; i++)     
+        {
+            uint16_t p = primes[i];
+            uint8_t hundreds = (p / 100) % 10;
+            uint8_t tens     = (p / 10)  % 10;
+            uint8_t ones      = p % 10;
+
+            usart_transmit(hundreds + '0');
+            usart_transmit(tens     + '0');
+            usart_transmit(ones     + '0');
+
+            usart_transmit(',');                 
+            usart_transmit(' ');                 
+        }
+
+        usart_transmit('\r');                    
+        usart_transmit('\n');                    
+        _delay_ms(1000);                         
+    }
+}
