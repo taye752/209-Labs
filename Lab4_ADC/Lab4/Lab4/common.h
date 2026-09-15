@@ -9,8 +9,9 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#define UBRR 12
 
-#define F_CPU 2000000
+#define F_CPU 2000000UL
 
 
 #endif /* COMMON_H_ */
