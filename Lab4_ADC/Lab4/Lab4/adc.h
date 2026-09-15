@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 void adc_init(void);
-uint16_t adc_read(uint8_t chan);
+uint16_t adc_read(uint8_t channel);
 
 
 #endif /* ADC_H_ */
