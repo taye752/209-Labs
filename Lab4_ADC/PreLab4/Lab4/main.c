@@ -10,16 +10,23 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#include "adc.h"
-#include "common.h"
 
 int main(void)
 {
     /* Replace with your application code */
-	    adc_init();
-	    while (1) {
+	
+	DDRB |= (1 << PB5);
+	DDRB &= ~(1 << PB7);
+	DDRC = 0x00;
+	DDRD = 0x00;
+	
+    while (1) 
+    {
+		if (!(PINB & (1 << PB7))) {
+			PORTB |= (1 << PB5);
+		} else {
+			PORTB &= ~(1 << PB5);
 		}
+    }
 }
-
-
 
