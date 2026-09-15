@@ -20,3 +20,8 @@ uint16_t adc_read(uint8_t channel) {
 	while (ADCSRA & (1 << ADSC));
 	return ADC;
 }
+
+uint16_t adc_convert_mv(uint16_t value) {
+	uint32_t Vout = ((uint32_t)value*5000)/1023;
+	return Vout;
+}
