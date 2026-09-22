@@ -19,10 +19,8 @@ int main(void){
 	DDRB |= (1 << PB5);
 	
 	timer0_init();
+	sei();
 
 	while(1){
-		if(timer0_check_clear_compare()) {
-			led_toggle();
-		}
 	}
 }

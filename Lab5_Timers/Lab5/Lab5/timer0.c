@@ -19,6 +19,8 @@ void timer0_init(){
 	TCCR0B = (1 << CS02);
 	OCR0A = 77;
 	
+	TIMSK0 |= (1 << OCIE0A);
+	
 }
 
 uint8_t timer0_check_clear_compare(){
@@ -30,4 +32,14 @@ uint8_t timer0_check_clear_compare(){
 		return 1;
 	}
 	return 0;
+}
+
+ISR(TIMER0_COMPA_vect) {
+	static uint8_t i = 0;
+	i++;
+	if(i == 10) {
+		led_toggle();
+		i = 0;
+	}
+
 }
